@@ -20,6 +20,8 @@ public class EvenBetterTermDocumentIndexer {
 		DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");
 		Iterable<Document> allDocs = corpus.getDocuments();
 		BasicTokenProcessor processor = new BasicTokenProcessor();
+
+		
 		for (Document lDoc : allDocs) {
 			EnglishTokenStream eStream = new EnglishTokenStream(lDoc.getContent());
 			Iterable<String> eTokens = eStream.getTokens();
@@ -27,6 +29,36 @@ public class EvenBetterTermDocumentIndexer {
 				invertedInd.addTerm(processor.processToken(lToken),lDoc.getId());
 			}
 		}
+
+		Scanner inScanner = new Scanner(System.in);
+		boolean continueSearch = true;
+		while (continueSearch){
+			System.out.print("Please enter term to search, or enter \"v\" for vocab: ");
+			String userTerm = inScanner.next();
+			String query = userTerm;
+			query = query.toLowerCase();
+			if (!query.equals("quit") && !query.equals("v")) {
+				if (invertedInd.getPostings(query) != null){
+					if (invertedInd.getPostings(query).size() > 0) {
+						for (Posting p : invertedInd.getPostings(query)) {
+							System.out.println("Document " + corpus.getDocument(p.getDocumentId()).getTitle());
+						}								
+					}
+				}	 
+				else {
+					System.out.println("Not Found.");
+				}
+			} 
+			else if (query.equals("v")) {
+				for (String lString : invertedInd.getVocabulary()) {
+					System.out.println(lString);
+				}			
+			} 
+			else {
+				continueSearch = false;
+			}
+		}
+		/*
 		Iterable<String> testList = invertedInd.getVocabulary();
 		for (String lString : testList) {
 			System.out.print(lString + "; ");
@@ -35,6 +67,7 @@ public class EvenBetterTermDocumentIndexer {
 			}			
 			System.out.println();
 		}
+		*/
 
 		/*
 		DocumentCorpus corpus = DirectoryCorpus.loadTextDirectory(Paths.get("").toAbsolutePath(), ".txt");
