@@ -1,4 +1,5 @@
 package cecs429.index;
+import cecs429.documents.*;
 import java.util.*;
 
 /**
@@ -6,14 +7,9 @@ import java.util.*;
  */
 public class InvertedIndex implements Index {
     Map<String, List<Posting>> invIndex = new HashMap<String, List<Posting>>();
-    private final List<String> mVocabulary;
-    private int mCorpusSize;
-
-    public InvertedIndex(Collection<String> vocabulary, int corpuseSize) {
-    	mVocabulary = new ArrayList<String>();
-    	mVocabulary.addAll(vocabulary);
-    	mCorpusSize = corpuseSize;
-    	Collections.sort(mVocabulary);
+	
+	public InvertedIndex() {	
+		
     }
     
     /**
@@ -26,7 +22,7 @@ public class InvertedIndex implements Index {
         if (termPostings != null){
         	// add documentId to postings
         	List<Posting> postingsOfTerm = invIndex.get(term);
-        	Posting lastPosting = postingsOfTerm.get(postingsOfTerm.size());
+        	Posting lastPosting = postingsOfTerm.get(postingsOfTerm.size()-1);
         	int lastDocID = lastPosting.getDocumentId();
         	if (!(lastDocID == documentId)){
         		invIndex.get(term).add(new Posting(documentId));
@@ -43,11 +39,15 @@ public class InvertedIndex implements Index {
      * Retrieves a list of Postings of documents that contain the given term.
      */
     public List<Posting> getPostings(String term){
-       //TO-DO
-    	return null;
+		return invIndex.get(term);
     }
 
     public List<String> getVocabulary() {
-    	return Collections.unmodifiableList(mVocabulary);
+		List<String> lVocab = new ArrayList<>();
+		for (String lstring : invIndex.keySet()) {
+			lVocab.add(lstring);
+		}
+		Collections.sort(lVocab);
+    	return Collections.unmodifiableList(lVocab);
     }
 }
