@@ -1,5 +1,4 @@
 package cecs429.index;
-import cecs429.documents.*;
 import java.util.*;
 
 /**
@@ -13,7 +12,7 @@ public class InvertedIndex implements Index {
     }
     
     /**
-     * TO-DO
+     * Add documentID to the term's postings list if it does not already exist
      */
     public void addTerm(String term, int documentId) {
     	// termPostings = the list of postings for that term
@@ -36,7 +35,7 @@ public class InvertedIndex implements Index {
     }
 
     /**
-     * Retrieves a list of Postings of documents that contain the given term.
+     * Retrieves a list of Postings of documents that contain the given term
      */
     public List<Posting> getPostings(String term){
 		return invIndex.get(term);
